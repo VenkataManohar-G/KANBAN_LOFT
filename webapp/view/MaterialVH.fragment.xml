@@ -1,0 +1,58 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core">
+	<Dialog
+		id="materialVHDialog"
+		title="Search Materials" contentWidth="50%">
+		<content>
+            <VBox id="formContainer" >
+                <Table id="materialvaluehelp" width="auto" mode="MultiSelect" inset="false" enableBusyIndicator="true"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    growing="true"
+                    alternateRowColors="true"
+                    showNoData="true"
+                    items="{
+                            path: 'MaterialsVH>/'
+                        }">
+                        <headerToolbar>
+								<OverflowToolbar id="id_tabletoolbar1">
+									<SearchField id="id_material_search" width="90%" />
+								</OverflowToolbar>
+						</headerToolbar>
+                        <columns>
+								<Column id="id_matvh_key1" >
+									<Text id="id_mat_key" text="Material"/>
+								</Column>
+                                <Column id="id_matvh_desc1">
+                                    <Text id="id_mat_desc" text="Material"/>
+								</Column>
+						</columns>
+                        <items>
+							<ColumnListItem id="id_materialvaluecolumns1" vAlign="Middle" >
+								<cells>
+                                    <Text  id="id_matkey_text"  text="{MaterialsVH>Material}" />
+                                    <Text  id="id_matdesc_text"  text="{MaterialsVH>MaterialText}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                </Table>
+            </VBox>
+        </content>
+        <footer>
+			<Toolbar id="id_toolbar">
+				<content>
+                    <MultiInput id="id_material_value_help" showValueHelp="false" />
+					<ToolbarSpacer id="id_spacer" />
+					<Button id="id_save" type="Emphasized"
+							text="ok"
+							press="._generateInvalidUserInput" />
+					<Button id="id_reject"
+						text="close"
+						type="Reject"
+						press="closematerialVHDialog" />
+				</content>
+			</Toolbar>
+		</footer>
+    </Dialog>
+</core:FragmentDefinition>

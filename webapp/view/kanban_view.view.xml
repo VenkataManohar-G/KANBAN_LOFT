@@ -1,0 +1,173 @@
+<mvc:View controllerName="kanbancard.controller.kanban_view"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m" xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout" >
+    <Page id="page" showHeader="false">
+        <content>
+            <VBox id="id_vbox" class="sapUiSmallMargin">
+                <f:SimpleForm id="id_simpleform" editable="true" layout="ColumnLayout" title="{i18n>titleform}" labelSpanXL="3"
+                            labelSpanL="3"
+                            labelSpanM="3"
+                            labelSpanS="12"
+                            adjustLabelSpan="false"
+                            emptySpanXL="4"
+                            emptySpanL="4"
+                            emptySpanM="4"
+                            emptySpanS="0"
+                            columnsXL="1"
+                            columnsL="1"
+                            columnsM="1" >
+                    <f:toolbar>
+				        <Toolbar id="TB1">
+					        <Title id="Title1" text=""/>
+					        <ToolbarSpacer id="id_toolspacer" />
+					        <Button id="id_execute" icon="sap-icon://print" press="onExecute" type="Emphasized" tooltip="Print Kanban card Labels"/>
+				        </Toolbar>
+			        </f:toolbar>
+                    <f:content>
+                        <core:Title id="id_stitle" text="{i18n>id_title}"></core:Title>
+                            <Label id="id_mat_label" text="{i18n>material}" design="Bold" width="100%" labelFor="id_mat" required="true" textAlign="Begin" textDirection="LTR" />
+                            <MultiInput id="id_mat" showSuggestion="true"
+			                                     showTableSuggestionValueHelp="false"
+                                                 suggestionItemSelected="onMaterialSelected"
+			                                     suggestionRows="{path: 'Materials>/'}" showValueHelp="true" change="onChangematerial"  liveChange="onMaterialliveChange"  valueHelpRequest=".onMaterialVH"
+                            >
+                            <suggestionColumns>
+                                <Column id="id_col_mat">
+                                    <Label id="id_label_mat" text="Material" />
+                                </Column>
+                                <Column id="id_col_mattext"
+                                    hAlign="Center">
+                                    <Label id="id_label_mattxt" text="Description" />
+                                </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                                <ColumnListItem id="id_collist_mat" >
+                                    <Label id="id_txt_mat" text="{Materials>Material}" />
+                                    <Label id="id_txt_mattext" text="{Materials>MaterialText}" />
+                                </ColumnListItem>
+                            </suggestionRows>           
+                            </MultiInput>
+                            <Label id="id_plant_label" text="{i18n>plant}" design="Bold" width="100%" labelFor="id_plant" textAlign="Begin" textDirection="LTR" />
+                            <MultiInput id="id_plant" showSuggestion="true"
+			                                     showTableSuggestionValueHelp="false"
+                                                 suggestionItemSelected=""
+			                                     suggestionRows="{/PlantsVH}" showValueHelp="true" change="onPlantChange"  valueHelpRequest=".onPlantVH">
+                            <suggestionColumns >
+                                <Column id="id_col_plant">
+                                    <Label id="id_label_plant" text="Plant" />
+                                </Column>
+                                <Column id="id_col_planttext"
+                                    hAlign="Center">
+                                    <Label id="id_label_planttxt" text="Description" />
+                                </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                                <ColumnListItem id="id_collist_plant" >
+                                    <Label id="id_txt_plant" text="{Plant}" />
+                                    <Label id="id_txt_text" text="{PlantName}" />
+                                </ColumnListItem>
+                            </suggestionRows>                     
+                            </MultiInput>
+                            <Label id="id_supplier_label" text="{i18n>supplier}" design="Bold" width="100%" labelFor="id_supplier" textAlign="Begin" textDirection="LTR" />
+                            <MultiInput id="id_supplier" showSuggestion="true"
+			                                     showTableSuggestionValueHelp="false"
+			                                     suggestionRows="{path: 'Suppliers>/'}" showValueHelp="true" change="onSupplierChange" liveChange="onSupplierliveChange" valueHelpRequest=".onPlantVH">
+                            <suggestionColumns>
+                                <Column id="id_col_supplier">
+                                    <Label id="id_label_supplier" text="Supplier" />
+                                </Column>
+                                <Column id="id_col_suppliertext"
+                                    hAlign="Center">
+                                    <Label id="id_label_suppliertxt" text="Supplier Name" />
+                                </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                                <ColumnListItem id="id_collist_supplier">
+                                    <Label id="id_txt_supplier" text="{Suppliers>Supplier}" />
+                                    <Label id="id_supplier_text" text="{Suppliers>SupplierName}" />
+                                </ColumnListItem>
+                            </suggestionRows>                     
+                            </MultiInput>
+                            <Label id="id_quantity" text="{i18n>id_quantity}" design="Bold" width="100%" labelFor="id_id_quantity_val" required="true" textAlign="Begin" textDirection="LTR" />
+                            <Input id="id_id_quantity_val" type="Number" />
+                            <Label id="id_printer_label" text="{i18n>printer}" design="Bold" width="100%" labelFor="id_printer" required="true" textAlign="Begin" textDirection="LTR" />
+                            <Input id="id_printer" showSuggestion="true" suggestionRows="{/Printers}" showValueHelp="true"  valueHelpRequest=".onPrinterVH">
+                            <suggestionColumns>
+                                <Column id="id_col_printer">
+                                    <Label id="id_label_print" text="Printer Name" />
+                                </Column>
+                                <Column id="id_col_printertext"
+                                    hAlign="Center">
+                                    <Label id="id_label_printertxt" text="Printer Description" />
+                                </Column>
+                            </suggestionColumns>
+                            <suggestionRows>
+                                <ColumnListItem id="id_collist_print">
+                                    <Label id="id_txt_print" text="{Printer}" />
+                                    <Label id="id_txt_printtext" text="{PrinterDesc}" />
+                                </ColumnListItem>
+                            </suggestionRows>   
+                            </Input>
+                            <Button id="id_search" type="Emphasized" text="Go" press="onFilter"></Button>
+                    </f:content>
+                </f:SimpleForm>
+            </VBox>
+            <VBox class="sapUiSmallMargin" id="tableContainer1">
+                <Table id="tableId1" width="auto" enableBusyIndicator="true" mode="MultiSelect"
+                    items="{
+                            path: 'Entries>/'  
+                        }">
+                        <columns >
+                                <Column id="id_column0" width="5%" hAlign="Left" visible="{FieldProperty>/bHideColumn}">
+                                    <Text id="id_button"/>
+								</Column>
+								<Column id="id_column1" mergeDuplicates="true" width="15%">
+                                    <Text id="id_partno" text="Part Number"/>
+								</Column>
+                                <Column id="id_column2" width="25%">
+                                    <Text id="id_partdesc" text="Part Description"/>
+								</Column>
+                                <Column id="id_column3" width="10%">
+                                    <Text id="id_uom" text="Base UoM"/>
+								</Column>
+                                <Column id="id_column4" width="20%">
+									<Text id="id_vendor" text="Vendor Name" />
+								</Column>
+                                 <Column id="id_column5" width="15%">
+									<Text id="id_vendor_name" text="Vendor Number" />
+								</Column>
+                                <Column id="id_column6" width="10%">
+									<Text id="id_moq" text="MOQ (QTY)" />
+								</Column>
+                                <Column id="id_column7" width="10%">
+									<Text id="id_box" text="Box QTY" />
+								</Column>
+                                <Column id="id_column8" width="10%">
+									<Text id="id_strike" text="Strike QTY " />
+								</Column>
+                                 <Column id="id_column9" width="10%">
+									<Text id="id_lead" text="Lead Time" />
+								</Column>
+						</columns>
+                        <items>
+							<ColumnListItem id="id_uploadcolumnlist1" vAlign="Middle" >
+								<cells>
+                                <Button textDirection="LTR" iconDensityAware="true" id="id_button_cell" icon="sap-icon://light-mode"  type="{= ${Entries>Status} === 'S' ? 'Success' : 'Negative'}" tooltip="{Entries>Message}" visible="{= ${Entries>Status} !== '' ? true : false}"/>
+                                <Text id="id_order" text="{Entries>partnumber}" />
+                                <Text id="id_part" text="{Entries>partdescription}" />
+                                <Text id="id_baseuom" text="{Entries>baseunit}" />
+                                <Text id="id_vendorname" text="{Entries>vendorname}" wrapping="true" wrappingType="Normal" maxLines="3"/>
+                                <Text id="id_vednornumber" text="{Entries>vendornumber}" wrapping="false" />
+                                <Text id="id_moq_val" text="{Entries>moqquant}" wrapping="false" />
+                                <Text id="id_box_val" text="{Entries>boxquant}" wrapping="false" />
+                                <Text id="id_strike_val" text="{Entries>strikequant}" wrapping="false" />
+                                <Text id="id_leadtime_val" text="{Entries>leadtime}" wrapping="false" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>      
+                </Table>   
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

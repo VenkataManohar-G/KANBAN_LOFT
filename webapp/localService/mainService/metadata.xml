@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns:sap="http://www.sap.com/Protocols/SAPData">
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_AGGREGATION',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ANALYTICS',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Analytics.v1" Alias="Analytics"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CAPABILITIES',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Capabilities.V1" Alias="Capabilities"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_CODELIST',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.CodeList.v1" Alias="SAP__CodeList"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMON',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_COMMUNICATION',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.Communication.v1" Alias="Communication"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_MEASURES',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Measures.V1" Alias="Measures"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_ODM',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.ODM.v1" Alias="SAP__ODM"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_PERSONALDATA',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.PersonalData.v1" Alias="PersonalData"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_UI',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/iwfnd/catalogservice;v=2/Vocabularies(TechnicalName='%2FIWBEP%2FVOC_VALIDATION',Version='0001',SAP__Origin='')/$value" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+        <edmx:Include Namespace="Org.OData.Validation.V1" Alias="Validation"/>
+    </edmx:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="cds_zsrvd_kanbanlabels_lft_srv" xml:lang="en" sap:schema-version="1" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="I_DraftAdministrativeDataType" sap:label="Draft Administration Data" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="DraftUUID"/>
+                    <PropertyRef Name="DraftEntityType"/>
+                </Key>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false" sap:label="Draft (Technical ID)"/>
+                <Property Name="DraftEntityType" Type="Edm.String" Nullable="false" MaxLength="30" sap:display-format="UpperCase" sap:label="Draft Entity ID"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:filter-restriction="interval" sap:label="Draft Created On"/>
+                <Property Name="CreatedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="CreatedByUserDescription" sap:label="Draft Created By"/>
+                <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:filter-restriction="interval" sap:label="Draft Last Changed On"/>
+                <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="LastChangedByUserDescription" sap:label="Draft Last Changed By"/>
+                <Property Name="DraftAccessType" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Draft Access Type"/>
+                <Property Name="ProcessingStartDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft In Process Since"/>
+                <Property Name="InProcessByUser" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:text="InProcessByUserDescription" sap:label="Draft In Process By"/>
+                <Property Name="DraftIsKeptByUser" Type="Edm.Boolean" sap:label="Draft Is Kept By User"/>
+                <Property Name="EnqueueStartDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Locked Since"/>
+                <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean" sap:label="Draft Created By Me"/>
+                <Property Name="DraftIsLastChangedByMe" Type="Edm.Boolean" sap:label="Draft Last Changed By Me"/>
+                <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean" sap:label="Draft In Process By Me"/>
+                <Property Name="CreatedByUserDescription" Type="Edm.String" MaxLength="80" sap:label="Draft Created By (Description)"/>
+                <Property Name="LastChangedByUserDescription" Type="Edm.String" MaxLength="80" sap:label="Draft Last Changed By (Description)"/>
+                <Property Name="InProcessByUserDescription" Type="Edm.String" MaxLength="80" sap:label="Draft In Process By (Description)"/>
+            </EntityType>
+            <EntityType Name="PrintersType" sap:label="Loftware All Printers" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SapUuid"/>
+                    <PropertyRef Name="Printer"/>
+                </Key>
+                <Property Name="SapUuid" Type="Edm.Guid" Nullable="false" sap:label="UUID" sap:quickinfo="16 Byte UUID in 16 Bytes (Raw Format)"/>
+                <Property Name="Printer" Type="Edm.String" Nullable="false" MaxLength="60"/>
+                <Property Name="PrinterDesc" Type="Edm.String" MaxLength="150"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created By" sap:quickinfo="Created By User"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Created On" sap:quickinfo="Creation Date Time"/>
+                <Property Name="LocalLastChangedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Changed By" sap:quickinfo="Local Instance Last Changed By User"/>
+                <Property Name="LocalLastChangedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Changed On" sap:quickinfo="Local Instance Last Change Date Time"/>
+                <Property Name="LastChangedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Changed On" sap:quickinfo="Last Change Date Time"/>
+            </EntityType>
+            <EntityType Name="ConfigurationType" sap:label="###GENERATED Core Data Service Entity" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="SapUuid"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="SapUuid" Type="Edm.Guid" Nullable="false" sap:label="SapUuid" sap:quickinfo="16 Byte UUID in 16 Bytes (Raw Format)" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="Name" Type="Edm.String" MaxLength="100" sap:label="Configuration Name"/>
+                <Property Name="Value" Type="Edm.String" sap:label="Configuration Value"/>
+                <Property Name="CreatedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Created By" sap:quickinfo="Created By User" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Created On" sap:quickinfo="Creation Date Time" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="LocalLastChangedBy" Type="Edm.String" MaxLength="12" sap:display-format="UpperCase" sap:label="Changed By" sap:quickinfo="Local Instance Last Changed By User" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="LocalLastChangedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Changed On" sap:quickinfo="Local Instance Last Change Date Time" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="LastChangedAt" Type="Edm.DateTimeOffset" Precision="7" sap:label="Changed On" sap:quickinfo="Last Change Date Time" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" sap:label="Has Draft" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="DraftEntityCreationDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Created On" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="DraftEntityLastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7" sap:label="Draft Last Changed On" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" sap:label="Has active" sap:creatable="false" sap:updatable="false"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" sap:label="Is active" sap:creatable="false" sap:updatable="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Relationship="cds_zsrvd_kanbanlabels_lft_srv.assoc_7FD009F933EA00A509608E62F2731380" FromRole="FromRole_assoc_7FD009F933EA00A509608E62F2731380" ToRole="ToRole_assoc_7FD009F933EA00A509608E62F2731380"/>
+                <NavigationProperty Name="SiblingEntity" Relationship="cds_zsrvd_kanbanlabels_lft_srv.assoc_01EFCB667DD53FF4E0292FCBECBAF048" FromRole="FromRole_assoc_01EFCB667DD53FF4E0292FCBECBAF048" ToRole="ToRole_assoc_01EFCB667DD53FF4E0292FCBECBAF048"/>
+            </EntityType>
+            <EntityType Name="MaterialsType" sap:label="Value Help for Materials" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Material"/>
+                </Key>
+                <Property Name="Material" Type="Edm.String" Nullable="false" MaxLength="18" sap:display-format="UpperCase" sap:label="Product" sap:quickinfo="Product Number"/>
+                <Property Name="MaterialExtId" Type="Edm.String" MaxLength="40" sap:display-format="UpperCase" sap:label="Material" sap:quickinfo="External Representation of Material Number"/>
+                <Property Name="MaterialText" Type="Edm.String" MaxLength="40" sap:label="Product Description"/>
+                <Property Name="MaterialGroup" Type="Edm.String" MaxLength="9" sap:display-format="UpperCase" sap:label="Product Group"/>
+                <Property Name="MaterialType" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Product Type"/>
+                <Property Name="Plant" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
+            </EntityType>
+            <EntityType Name="PlantsVHType" sap:label="Plant Value Help" sap:content-version="1">
+                <Key>
+                    <PropertyRef Name="Plant"/>
+                </Key>
+                <Property Name="Plant" Type="Edm.String" Nullable="false" MaxLength="4" sap:display-format="UpperCase" sap:label="Plant"/>
+                <Property Name="PlantName" Type="Edm.String" MaxLength="30" sap:label="Plant Name"/>
+                <Property Name="ValuationArea" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Valuation Area"/>
+                <Property Name="PlantCustomer" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Customer No Plant" sap:quickinfo="Customer Number of Plant"/>
+                <Property Name="PlantSupplier" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Sppl. No. Plnt" sap:quickinfo="Supplier Number of Plant"/>
+                <Property Name="FactoryCalendar" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Factory Calendar" sap:quickinfo="Factory calendar key"/>
+                <Property Name="DefaultPurchasingOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Purch. Organization" sap:quickinfo="Purchasing Organization"/>
+                <Property Name="SalesOrganization" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Sls Organization ICB" sap:quickinfo="Sales Organization for Intercompany Billing"/>
+                <Property Name="AddressID" Type="Edm.String" MaxLength="10" sap:display-format="UpperCase" sap:label="Address"/>
+                <Property Name="PlantCategory" Type="Edm.String" MaxLength="1" sap:display-format="UpperCase" sap:label="Plant Cat." sap:quickinfo="Plant category"/>
+                <Property Name="DistributionChannel" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Distrib.Channel" sap:quickinfo="Distribution Channel for Intercompany billing"/>
+                <Property Name="Division" Type="Edm.String" MaxLength="2" sap:display-format="UpperCase" sap:label="Interco. Billing Div" sap:quickinfo="Division for Intercompany Billing"/>
+                <Property Name="Language" Type="Edm.String" MaxLength="2" sap:label="Language Key"/>
+                <Property Name="IsMarkedForArchiving" Type="Edm.Boolean" sap:label="Archiving Flag" sap:quickinfo="Central archiving marker for master record"/>
+                <Property Name="BusinessPlace" Type="Edm.String" MaxLength="4" sap:display-format="UpperCase" sap:label="Business Place"/>
+            </EntityType>
+            <ComplexType Name="DummyFunctionImportResult">
+                <Property Name="IsInvalid" Type="Edm.Boolean" sap:label="TRUE"/>
+            </ComplexType>
+            <Association Name="assoc_01EFCB667DD53FF4E0292FCBECBAF048" sap:content-version="1">
+                <End Type="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType" Multiplicity="1" Role="FromRole_assoc_01EFCB667DD53FF4E0292FCBECBAF048"/>
+                <End Type="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType" Multiplicity="0..1" Role="ToRole_assoc_01EFCB667DD53FF4E0292FCBECBAF048"/>
+            </Association>
+            <Association Name="assoc_7FD009F933EA00A509608E62F2731380" sap:content-version="1">
+                <End Type="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType" Multiplicity="1" Role="FromRole_assoc_7FD009F933EA00A509608E62F2731380"/>
+                <End Type="cds_zsrvd_kanbanlabels_lft_srv.I_DraftAdministrativeDataType" Multiplicity="0..1" Role="ToRole_assoc_7FD009F933EA00A509608E62F2731380"/>
+            </Association>
+            <EntityContainer Name="cds_zsrvd_kanbanlabels_lft_srv_Entities" m:IsDefaultEntityContainer="true" sap:message-scope-supported="true" sap:supported-formats="atom json xlsx">
+                <EntitySet Name="I_DraftAdministrativeData" EntityType="cds_zsrvd_kanbanlabels_lft_srv.I_DraftAdministrativeDataType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:searchable="true" sap:addressable="false" sap:content-version="1"/>
+                <EntitySet Name="Printers" EntityType="cds_zsrvd_kanbanlabels_lft_srv.PrintersType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="Configuration" EntityType="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType" sap:content-version="1"/>
+                <EntitySet Name="Materials" EntityType="cds_zsrvd_kanbanlabels_lft_srv.MaterialsType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <EntitySet Name="PlantsVH" EntityType="cds_zsrvd_kanbanlabels_lft_srv.PlantsVHType" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1"/>
+                <AssociationSet Name="assoc_01EFCB667DD53FF4E0292FCBECBAF048" Association="cds_zsrvd_kanbanlabels_lft_srv.assoc_01EFCB667DD53FF4E0292FCBECBAF048" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="Configuration" Role="FromRole_assoc_01EFCB667DD53FF4E0292FCBECBAF048"/>
+                    <End EntitySet="Configuration" Role="ToRole_assoc_01EFCB667DD53FF4E0292FCBECBAF048"/>
+                </AssociationSet>
+                <AssociationSet Name="assoc_7FD009F933EA00A509608E62F2731380" Association="cds_zsrvd_kanbanlabels_lft_srv.assoc_7FD009F933EA00A509608E62F2731380" sap:creatable="false" sap:updatable="false" sap:deletable="false" sap:content-version="1">
+                    <End EntitySet="Configuration" Role="FromRole_assoc_7FD009F933EA00A509608E62F2731380"/>
+                    <End EntitySet="I_DraftAdministrativeData" Role="ToRole_assoc_7FD009F933EA00A509608E62F2731380"/>
+                </AssociationSet>
+                <FunctionImport Name="ConfigurationActivate" ReturnType="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType" EntitySet="Configuration" m:HttpMethod="POST" sap:action-for="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType">
+                    <Parameter Name="SapUuid" Type="Edm.Guid" Mode="In" sap:label="UUID"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In" sap:label="Is active"/>
+                </FunctionImport>
+                <FunctionImport Name="ConfigurationDiscard" ReturnType="cds_zsrvd_kanbanlabels_lft_srv.DummyFunctionImportResult" m:HttpMethod="POST" sap:action-for="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType">
+                    <Parameter Name="SapUuid" Type="Edm.Guid" Mode="In" sap:label="UUID"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In" sap:label="Is active"/>
+                </FunctionImport>
+                <FunctionImport Name="ConfigurationEdit" ReturnType="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType" EntitySet="Configuration" m:HttpMethod="POST" sap:action-for="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType">
+                    <Parameter Name="SapUuid" Type="Edm.Guid" Mode="In" sap:label="UUID"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In" sap:label="Is active"/>
+                    <Parameter Name="PreserveChanges" Type="Edm.Boolean" Mode="In" Nullable="true" sap:label="TRUE"/>
+                </FunctionImport>
+                <FunctionImport Name="ConfigurationPrepare" ReturnType="cds_zsrvd_kanbanlabels_lft_srv.DummyFunctionImportResult" m:HttpMethod="POST" sap:action-for="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType">
+                    <Parameter Name="SapUuid" Type="Edm.Guid" Mode="In" sap:label="UUID"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In" sap:label="Is active"/>
+                </FunctionImport>
+                <FunctionImport Name="ConfigurationResume" ReturnType="cds_zsrvd_kanbanlabels_lft_srv.DummyFunctionImportResult" m:HttpMethod="POST" sap:action-for="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType">
+                    <Parameter Name="SapUuid" Type="Edm.Guid" Mode="In" sap:label="UUID"/>
+                    <Parameter Name="IsActiveEntity" Type="Edm.Boolean" Mode="In" sap:label="Is active"/>
+                </FunctionImport>
+            </EntityContainer>
+            <Annotation Term="Core.SchemaVersion" String="1.0.0" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+            <Annotations Target="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities/Configuration" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.DraftRoot">
+                    <Record>
+                        <PropertyValue Property="ActivationAction" String="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities/ConfigurationActivate"/>
+                        <PropertyValue Property="DiscardAction" String="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities/ConfigurationDiscard"/>
+                        <PropertyValue Property="EditAction" String="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities/ConfigurationEdit"/>
+                        <PropertyValue Property="PreparationAction" String="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities/ConfigurationPrepare"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="FilterExpressionRestrictions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="Value"/>
+                                    <PropertyValue Property="AllowedExpressions" String="SearchExpression"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="DraftEntityCreationDateTime"/>
+                                    <PropertyValue Property="AllowedExpressions" String="SingleRange"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="DraftEntityLastChangeDateTime"/>
+                                    <PropertyValue Property="AllowedExpressions" String="SingleRange"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="NonFilterableProperties">
+                            <Collection/>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="true"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="SAP__core.OptimisticConcurrency">
+                    <Collection>
+                        <PropertyPath>LocalLastChangedAt</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="Capabilities.SortRestrictions">
+                    <Record>
+                        <PropertyValue Property="NonSortableProperties">
+                            <Collection>
+                                <PropertyPath>Value</PropertyPath>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ApplyMultiUnitBehaviorForSortingAndFiltering" Bool="true"/>
+            </Annotations>
+            <Annotations Target="cds_zsrvd_kanbanlabels_lft_srv.ConfigurationType" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Common.ChangedAt" Path="LastChangedAt"/>
+                <Annotation Term="Common.CreatedAt" Path="CreatedAt"/>
+                <Annotation Term="Common.CreatedBy" Path="CreatedBy"/>
+            </Annotations>
+            <Annotations Target="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities/I_DraftAdministrativeData" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record>
+                        <PropertyValue Property="FilterExpressionRestrictions">
+                            <Collection>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="CreationDateTime"/>
+                                    <PropertyValue Property="AllowedExpressions" String="SingleRange"/>
+                                </Record>
+                                <Record>
+                                    <PropertyValue Property="Property" PropertyPath="LastChangeDateTime"/>
+                                    <PropertyValue Property="AllowedExpressions" String="SingleRange"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities/Materials" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities/PlantsVH" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities/Printers" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Capabilities.DeleteRestrictions">
+                    <Record>
+                        <PropertyValue Property="Deletable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.InsertRestrictions">
+                    <Record>
+                        <PropertyValue Property="Insertable" Bool="false"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Capabilities.UpdateRestrictions">
+                    <Record>
+                        <PropertyValue Property="Updatable" Bool="false"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="cds_zsrvd_kanbanlabels_lft_srv.cds_zsrvd_kanbanlabels_lft_srv_Entities" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                <Annotation Term="Org.OData.Capabilities.V1.BatchSupport">
+                    <Record Type="Org.OData.Capabilities.V1.BatchSupportType">
+                        <PropertyValue Property="ReferencesAcrossChangeSetsSupported" Bool="true"/>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <atom:link rel="self" href="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/sap/ZSRVB_KANBANLABELS_LFT_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+            <atom:link rel="latest-version" href="https://my415989-api.s4hana.cloud.sap/sap/opu/odata/sap/ZSRVB_KANBANLABELS_LFT_SRV/$metadata" xmlns:atom="http://www.w3.org/2005/Atom"/>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>

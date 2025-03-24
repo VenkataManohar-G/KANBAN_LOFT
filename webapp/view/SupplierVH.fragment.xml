@@ -1,0 +1,59 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core">
+	<Dialog
+		id="supplierVHDialog"
+		title="Search Suppiers" contentWidth="50%">
+		<content>
+            <VBox id="formsupplierContainer" >
+                <Table id="suppliervaluehelp" width="auto" mode="MultiSelect" inset="false" enableBusyIndicator="true"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    growing="true"
+                    alternateRowColors="true"
+                    showNoData="true"
+					selectionChange="OnVHSupplierSelected"
+                    items="{
+                            path: 'SupplierVH>/'
+                        }">
+                        <headerToolbar>
+								<OverflowToolbar id="id_tabletoolbar2">
+									<SearchField id="id_supplier_search" search="onSupplierSearch" change="onSupplierSearch" placeholder="Search Suppliers" width="90%" />
+								</OverflowToolbar>
+						</headerToolbar>
+                        <columns>
+								<Column id="id_supvh_key1" >
+									<Text id="id_sup_key" text="Supplier"/>
+								</Column>
+                                <Column id="id_supvh_desc1">
+                                    <Text id="id_sup_desc" text="Supplier Name"/>
+								</Column>
+						</columns>
+                        <items>
+							<ColumnListItem id="id_suppliervaluecolumns1" vAlign="Middle">
+								<cells>
+                                    <Text  id="id_supkey_text"  text="{SupplierVH>Supplier}" />
+                                    <Text  id="id_supdesc_text"  text="{SupplierVH>SupplierName}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                </Table>
+            </VBox>
+        </content>
+        <footer>
+			<Toolbar id="id_toolbar1">
+				<content>
+                    <MultiInput id="id_supplier_value_help" showValueHelp="false" placeholder="Suppliers Selected" />
+					<ToolbarSpacer id="id_spacer1" />
+					<Button id="id_suppliersave" type="Emphasized"
+							text="ok"
+							press="oksupplierVHDialog" />
+					<Button id="id_supplierreject"
+						text="close"
+						type="Reject"
+						press="closesupplierVHDialog" />
+				</content>
+			</Toolbar>
+		</footer>
+    </Dialog>
+</core:FragmentDefinition>

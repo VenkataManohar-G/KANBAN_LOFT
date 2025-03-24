@@ -51,7 +51,7 @@
                             <Label id="id_plant_label" text="{i18n>plant}" design="Bold" width="100%" labelFor="id_plant" textAlign="Begin" textDirection="LTR" />
                             <MultiInput id="id_plant" showSuggestion="true"
 			                                     showTableSuggestionValueHelp="false"
-                                                 suggestionItemSelected=""
+                                                 suggestionItemSelected="onPlantSelected"
 			                                     suggestionRows="{/PlantsVH}" showValueHelp="true" change="onPlantChange"  valueHelpRequest=".onPlantVH">
                             <suggestionColumns >
                                 <Column id="id_col_plant">
@@ -71,8 +71,9 @@
                             </MultiInput>
                             <Label id="id_supplier_label" text="{i18n>supplier}" design="Bold" width="100%" labelFor="id_supplier" textAlign="Begin" textDirection="LTR" />
                             <MultiInput id="id_supplier" showSuggestion="true"
+                                                 suggestionItemSelected="onSupplierSelected"
 			                                     showTableSuggestionValueHelp="false"
-			                                     suggestionRows="{path: 'Suppliers>/'}" showValueHelp="true" change="onSupplierChange" liveChange="onSupplierliveChange" valueHelpRequest=".onPlantVH">
+			                                     suggestionRows="{path: 'Suppliers>/'}" showValueHelp="true" change="onSupplierChange" liveChange="onSupplierliveChange" valueHelpRequest=".onSupplierVH">
                             <suggestionColumns>
                                 <Column id="id_col_supplier">
                                     <Label id="id_label_supplier" text="Supplier" />
@@ -89,10 +90,10 @@
                                 </ColumnListItem>
                             </suggestionRows>                     
                             </MultiInput>
-                            <Label id="id_quantity" text="{i18n>id_quantity}" design="Bold" width="100%" labelFor="id_id_quantity_val" required="true" textAlign="Begin" textDirection="LTR" />
-                            <Input id="id_id_quantity_val" type="Number" />
+                            <Label id="id_quantity" text="{i18n>id_quantity}" design="Bold" width="100%" labelFor="id_id_quantity_val" required="true" textAlign="Begin"  textDirection="LTR" />
+                            <Input id="id_id_quantity_val" type="Number" change="onQuantityChange" />
                             <Label id="id_printer_label" text="{i18n>printer}" design="Bold" width="100%" labelFor="id_printer" required="true" textAlign="Begin" textDirection="LTR" />
-                            <Input id="id_printer" showSuggestion="true" suggestionRows="{/Printers}" showValueHelp="true"  valueHelpRequest=".onPrinterVH">
+                            <Input id="id_printer" showSuggestion="true" suggestionRows="{/Printers}" showValueHelp="true" change="onPrinterChanges"  valueHelpRequest=".onPrinterVH">
                             <suggestionColumns>
                                 <Column id="id_col_printer">
                                     <Label id="id_label_print" text="Printer Name" />
@@ -114,7 +115,7 @@
                 </f:SimpleForm>
             </VBox>
             <VBox class="sapUiSmallMargin" id="tableContainer1">
-                <Table id="tableId1" width="auto" enableBusyIndicator="true" mode="MultiSelect"
+                <Table id="tableId1" width="auto" enableBusyIndicator="true" mode="MultiSelect" updateFinished="onUpdateFinished"
                     items="{
                             path: 'Entries>/'  
                         }">
@@ -158,7 +159,7 @@
                                 <Text id="id_part" text="{Entries>partdescription}" />
                                 <Text id="id_baseuom" text="{Entries>baseunit}" />
                                 <Text id="id_vendorname" text="{Entries>vendorname}" wrapping="true" wrappingType="Normal" maxLines="3"/>
-                                <Text id="id_vednornumber" text="{Entries>vendornumber}" wrapping="false" />
+                                <ObjectStatus id="id_vednornumber" text="{path: 'Entries>vendornumber', formatter: '.formatVendorNumber'}" state="{path: 'Entries>vendornumber',formatter: '.formatVendorNumberStatus'}" />
                                 <Text id="id_moq_val" text="{Entries>moqquant}" wrapping="false" />
                                 <Text id="id_box_val" text="{Entries>boxquant}" wrapping="false" />
                                 <Text id="id_strike_val" text="{Entries>strikequant}" wrapping="false" />

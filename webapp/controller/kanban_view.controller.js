@@ -22,13 +22,27 @@ sap.ui.define([
     "sap/m/MessageBox",
     'sap/m/Tokenizer',
 ], (Controller, Token, coreLibrary, exportLibrary, Spreadsheet, Dialog, mobileLibrary, Button, Text, Sorter, Filter,
-    SearchField, UIColumn, MColumn, Label, TypeString, compLibrary, FilterOperator, Fragment, Message, MessageBox,Tokenizer) => {
+    SearchField, UIColumn, MColumn, Label, TypeString, compLibrary, FilterOperator, Fragment, Message, MessageBox, Tokenizer) => {
     "use strict";
     var sUrl, sToken;
-    var kanbanLogs = [], HierarchyEntries = [],oDialogmaterialVH;
+    var kanbanLogs = [], HierarchyEntries = [], oDialogmaterialVH, oDialogsupplierVH, oDialogplantVH;
     var ValueState = coreLibrary.ValueState;
-    var omaterialsModel = new sap.ui.model.json.JSONModel(),omaterialsVHModel = new sap.ui.model.json.JSONModel(), osuppliersModel = new sap.ui.model.json.JSONModel(), oFieldModel, oHierarchyEntryModel, oExecuteBusyModel;
+    var omaterialsModel = new sap.ui.model.json.JSONModel(), omaterialsVHModel = new sap.ui.model.json.JSONModel(), osuppliersModel = new sap.ui.model.json.JSONModel(), osuppliersVHModel = new sap.ui.model.json.JSONModel(), oplantsVHModel = new sap.ui.model.json.JSONModel(), oprinterModel = new sap.ui.model.json.JSONModel(),oFieldModel, oHierarchyEntryModel, oExecuteBusyModel;
     return Controller.extend("kanbancard.controller.kanban_view", {
+        formatVendorNumber: function(oValue){
+            if (oValue) {
+                return oValue;
+            }else{
+                return 'No PIR found'
+            }
+        },
+        formatVendorNumberStatus:function(oValue){
+            if (oValue) {
+                return 'None';
+            }else{
+                return 'Error'
+            }
+        },
         onInit() {
             var that = this;
             oFieldModel = new sap.ui.model.json.JSONModel({
@@ -117,47 +131,139 @@ sap.ui.define([
                 that.getView().setModel(osuppliersModel, "Suppliers");
             }
         },
-        onChangematerial: async function(oEvent){
+        onChangematerial: async function (oEvent) {
             var oValue = oEvent.getParameter("newValue");
             var oMultiInput = this.getView().byId("id_mat"),
-            oModel =this.getView().getModel(),
-            that = this,
-            oFilter = [],ofilterMaterial,MaterialsVH = [];
-            if(oValue){
+                oModel = this.getView().getModel(),
+                that = this,
+                oFilter = [], ofilterMaterial, MaterialsVH = [];
+            if (oValue) {
                 ofilterMaterial = new sap.ui.model.Filter("Material", "EQ", oValue);
                 oFilter.push(ofilterMaterial);
-                var oMaterialsVH = await that._getmaterials(oModel,oFilter);
-                if(oMaterialsVH == '404'){
-                    oMultiInput.setValueState(ValueState.Warning);
-                    oMultiInput.setValueStateText('Invalid Material');
-                }else{
-                    oMultiInput.setValueState(ValueState.None);
-                    oMultiInput.setValueStateText('');
-                    var oMaterialTokens  = oMultiInput.getTokens();
-                    oMaterialTokens.map(function(oToken){
-                        MaterialsVH.push({MaterialId:oToken.getKey()});
-                    });
-                    let filteredTokenMaterials = MaterialsVH.filter(item => item.MaterialId == oValue);
-                    if (filteredTokenMaterials.length > 0){
-                    }else{
-                        oMultiInput.addToken(new sap.m.Token({
-                            key: oValue, text: oValue
-                        }));
+                try {
+                    var oMaterialsVH = await that._getmaterials(oModel, oFilter);
+                    if (oMaterialsVH == '404') {
+                        oMultiInput.setValueState(ValueState.Warning);
+                        oMultiInput.setValueStateText('Invalid Material Id- ' + oValue);
+                    } else {
+                        oMultiInput.setValueState(ValueState.None);
+                        oMultiInput.setValueStateText('');
+                        var oMaterialTokens = oMultiInput.getTokens();
+                        oMaterialTokens.map(function (oToken) {
+                            MaterialsVH.push({ MaterialId: oToken.getKey() });
+                        });
+                        let filteredTokenMaterials = MaterialsVH.filter(item => item.MaterialId == oValue);
+                        if (filteredTokenMaterials.length > 0) {
+                        } else {
+                            oMultiInput.addToken(new sap.m.Token({
+                                key: oValue, text: oValue
+                            }));
+                        }
                     }
+                } catch (error) {
+                    oMultiInput.setValueState(ValueState.Warning);
+                    oMultiInput.setValueStateText('Invalid Material Id- ' + oValue);
                 }
-            }else{
+
+            } else {
                 oMultiInput.setValueState(ValueState.None);
                 oMultiInput.setValueStateText('');
             }
         },
-        onMaterialSelected: function(oEvent){
+        onMaterialSelected: function (oEvent) {
             this.getView().byId("id_mat").setValueState(ValueState.None);
             this.getView().byId("id_mat").setValueStateText('');
         },
-        onMaterialVH: async function(oEvent){
+        onSupplierChange: async function (oEvent) {
+            var oValue = oEvent.getParameter("newValue");
+            var oMultiInput = this.getView().byId("id_supplier"),
+                oModel = this.getView().getModel(),
+                that = this,
+                oFilter = [], ofilterSupplier, SupplierVH = [];
+            if (oValue) {
+                ofilterSupplier = new sap.ui.model.Filter("Supplier", "EQ", oValue);
+                oFilter.push(ofilterSupplier);
+                try {
+                    var SupplierVH = await that._getsuppliers(oModel, oFilter);
+                    if (SupplierVH == '404') {
+                        oMultiInput.setValueState(ValueState.Warning);
+                        oMultiInput.setValueStateText('Invalid Supplier Id- ' + oValue);
+                    } else {
+                        oMultiInput.setValueState(ValueState.None);
+                        oMultiInput.setValueStateText('');
+                        var oSupplierTokens = oMultiInput.getTokens();
+                        oSupplierTokens.map(function (oToken) {
+                            SupplierVH.push({ SupplierId: oToken.getKey() });
+                        });
+                        let filteredTokenSuppliers = SupplierVH.filter(item => item.SupplierId == oValue);
+                        if (filteredTokenSuppliers.length > 0) {
+                        } else {
+                            oMultiInput.addToken(new sap.m.Token({
+                                key: oValue, text: oValue
+                            }));
+                        }
+                    }
+                } catch (error) {
+                    oMultiInput.setValueState(ValueState.Warning);
+                    oMultiInput.setValueStateText('Invalid Supplier Id- ' + oValue);
+                }
+
+            } else {
+                oMultiInput.setValueState(ValueState.None);
+                oMultiInput.setValueStateText('');
+            }
+        },
+        onSupplierSelected: function (oEvent) {
+            this.getView().byId("id_supplier").setValueState(ValueState.None);
+            this.getView().byId("id_supplier").setValueStateText('');
+        },
+        onPlantChange: async function (oEvent) {
+            var oValue = oEvent.getParameter("newValue");
+            var oMultiInput = this.getView().byId("id_plant"),
+                oModel = this.getView().getModel(),
+                that = this,
+                oFilter = [], ofilterPlant, PlantVH = [];
+            if (oValue) {
+                ofilterPlant = new sap.ui.model.Filter("Plant", "EQ", oValue);
+                oFilter.push(ofilterPlant);
+                try {
+                    var PlantVH = await that._getplants(oModel, oFilter);
+                    if (PlantVH == '404') {
+                        oMultiInput.setValueState(ValueState.Warning);
+                        oMultiInput.setValueStateText('Invalid Plant- ' + oValue);
+                    } else {
+                        oMultiInput.setValueState(ValueState.None);
+                        oMultiInput.setValueStateText('');
+                        var oPlantTokens = oMultiInput.getTokens();
+                        oPlantTokens.map(function (oToken) {
+                            PlantVH.push({ Plant: oToken.getKey() });
+                        });
+                        let filteredTokenPlants = PlantVH.filter(item => item.Plant == oValue);
+                        if (filteredTokenPlants.length > 0) {
+                        } else {
+                            oMultiInput.addToken(new sap.m.Token({
+                                key: oValue, text: oValue
+                            }));
+                        }
+                    }
+                } catch (error) {
+                    oMultiInput.setValueState(ValueState.Warning);
+                    oMultiInput.setValueStateText('Invalid Plant Id- ' + oValue);
+                }
+
+            } else {
+                oMultiInput.setValueState(ValueState.None);
+                oMultiInput.setValueStateText('');
+            }
+        },
+        onPlantSelected: function (oEvent) {
+            this.getView().byId("id_plant").setValueState(ValueState.None);
+            this.getView().byId("id_plant").setValueStateText('');
+        },
+        onMaterialVH: async function (oEvent) {
             var oModel = this.getView().getModel(),
-            that = this,
-            oFilter;
+                that = this,
+                oFilter;
             oDialogmaterialVH = this.byId("materialVHDialog");
             let oMaterialsVH = await that._getmaterials(oModel, oFilter);
             if (oMaterialsVH !== '404') {
@@ -174,12 +280,265 @@ sap.ui.define([
                 oDialogmaterialVH = new sap.ui.xmlfragment(this.getView().getId(), "kanbancard.view.MaterialVH", this);
                 this.getView().addDependent(oDialogmaterialVH);
                 oDialogmaterialVH.open();
-            }else{
+            } else {
                 oDialogmaterialVH.open();
             }
         },
-        closematerialVHDialog: function(){
+        onMaterialSearch: async function (oEvent) {
+            var oModel = this.getView().getModel(),
+                oTable = this.getView().byId("materialvaluehelp"),
+                sQuery = oEvent.getSource().getValue(),
+                that = this,
+                oFilter = [],
+                oMaterialfilter;
+            oMaterialfilter = new sap.ui.model.Filter({
+                filters: [
+                    new sap.ui.model.Filter("Material", sap.ui.model.FilterOperator.Contains, sQuery),
+                    new sap.ui.model.Filter("MaterialText", sap.ui.model.FilterOperator.Contains, sQuery)
+                ],
+                and: false
+            });
+            oFilter.push(oMaterialfilter);
+            oTable.removeSelections(true);
+            let oMaterialsVH = await that._getmaterials(oModel, oFilter);
+            if (oMaterialsVH !== '404') {
+                omaterialsVHModel.setData(oMaterialsVH);
+                omaterialsVHModel.refresh();
+                that.getView().setModel(omaterialsVHModel, "MaterialsVH");
+            } else {
+                oMaterialsVH = [];
+                omaterialsVHModel.setData(oMaterialsVH);
+                omaterialsVHModel.refresh();
+                that.getView().setModel(omaterialsVHModel, "MaterialsVH");
+            }
+        },
+        OnVHMaterialSelected: function (oEvent) {
+            var oMultiInputSelected = this.getView().byId('id_material_value_help');
+            var oSelected = oEvent.getParameter('selected');
+            var oRemoved = oEvent.getParameter('removed');
+            var oValue = oEvent.getParameter('listItem').getCells()[0].getText();
+            if (oSelected === true) {
+                oMultiInputSelected.addToken(new sap.m.Token({
+                    key: oValue, text: oValue
+                }));
+            } else {
+                var removedTokens = oMultiInputSelected.getTokens();
+                var index = -1;
+                for (var i = 0; i < removedTokens.length; i++) {
+                    if (removedTokens[i].getKey() === oValue || removedTokens[i].getText() === oValue) {
+                        index = i;
+                        break;
+                    }
+                }
+                oMultiInputSelected.removeToken(index);
+            }
+        },
+        okmaterialVHDialog: function () {
+            var oTable = this.getView().byId('materialvaluehelp');
+            var oSelectedTokens = this.getView().byId('id_material_value_help');
+            var oMultiInput = this.getView().byId('id_mat');
+            var aTokens = oSelectedTokens.getTokens();
+            aTokens.forEach(function (oToken) {
+                if (oToken) {
+                    oMultiInput.addToken(oToken);
+                }
+            });
             this.getView().byId("materialVHDialog").close();
+            oTable.removeSelections(true);
+        },
+        closematerialVHDialog: function () {
+            var oSelectedTokens = this.getView().byId('id_material_value_help');
+            var oTable = this.getView().byId('materialvaluehelp');
+            oTable.removeSelections(true);
+            oSelectedTokens.removeAllTokens();
+            this.getView().byId("materialVHDialog").close();
+        },
+        /*Supplier Value Help*/
+        onSupplierVH: async function () {
+            var oModel = this.getView().getModel(),
+                that = this,
+                oFilter;
+            oDialogsupplierVH = this.byId("supplierVHDialog");
+            let oSuppliersVH = await that._getsuppliers(oModel, oFilter);
+            if (oSuppliersVH !== '404') {
+                osuppliersVHModel.setData(oSuppliersVH);
+                osuppliersVHModel.refresh();
+                that.getView().setModel(osuppliersVHModel, "SupplierVH");
+            } else {
+                oSuppliersVH = [];
+                osuppliersVHModel.setData(oSuppliersVH);
+                osuppliersVHModel.refresh();
+                that.getView().setModel(osuppliersVHModel, "SupplierVH");
+            }
+            if (!oDialogsupplierVH) {
+                oDialogsupplierVH = new sap.ui.xmlfragment(this.getView().getId(), "kanbancard.view.SupplierVH", this);
+                this.getView().addDependent(oDialogsupplierVH);
+                oDialogsupplierVH.open();
+            } else {
+                oDialogsupplierVH.open();
+            }
+        },
+        onSupplierSearch: async function (oEvent) {
+            var oModel = this.getView().getModel(),
+                oTable = this.getView().byId('suppliervaluehelp'),
+                sQuery = oEvent.getSource().getValue(),
+                that = this,
+                oFilter = [],
+                oSupplierfilter;
+            oSupplierfilter = new sap.ui.model.Filter({
+                filters: [
+                    new sap.ui.model.Filter("Supplier", sap.ui.model.FilterOperator.Contains, sQuery),
+                    new sap.ui.model.Filter("SupplierName", sap.ui.model.FilterOperator.Contains, sQuery)
+                ],
+                and: false
+            });
+            oFilter.push(oSupplierfilter);
+            oTable.removeSelections(true);
+            let oSuppliersVH = await that._getsuppliers(oModel, oFilter);
+            if (oSuppliersVH !== '404') {
+                osuppliersVHModel.setData(oSuppliersVH);
+                osuppliersVHModel.refresh();
+                that.getView().setModel(osuppliersVHModel, "SupplierVH");
+            } else {
+                oSuppliersVH = [];
+                osuppliersVHModel.setData(oSuppliersVH);
+                osuppliersVHModel.refresh();
+                that.getView().setModel(osuppliersVHModel, "SupplierVH");
+            }
+        },
+        OnVHSupplierSelected: function (oEvent) {
+            var oMultiInputSelected = this.getView().byId('id_supplier_value_help');
+            var oSelected = oEvent.getParameter('selected');
+            var oRemoved = oEvent.getParameter('removed');
+            var oValue = oEvent.getParameter('listItem').getCells()[0].getText();
+            if (oSelected === true) {
+                oMultiInputSelected.addToken(new sap.m.Token({
+                    key: oValue, text: oValue
+                }));
+            } else {
+                var removedTokens = oMultiInputSelected.getTokens();
+                var index = -1;
+                for (var i = 0; i < removedTokens.length; i++) {
+                    if (removedTokens[i].getKey() === oValue || removedTokens[i].getText() === oValue) {
+                        index = i;
+                        break;
+                    }
+                }
+                oMultiInputSelected.removeToken(index);
+            }
+        },
+        oksupplierVHDialog: function () {
+            var oTable = this.getView().byId('suppliervaluehelp');
+            var oSelectedTokens = this.getView().byId('id_supplier_value_help');
+            var oMultiInput = this.getView().byId('id_supplier');
+            var aTokens = oSelectedTokens.getTokens();
+            aTokens.forEach(function (oToken) {
+                if (oToken) {
+                    oMultiInput.addToken(oToken);
+                }
+            });
+            this.getView().byId("supplierVHDialog").close();
+            oTable.removeSelections(true);
+        },
+        closesupplierVHDialog: function () {
+            var oSelectedTokens = this.getView().byId('id_supplier_value_help');
+            var oTable = this.getView().byId('suppliervaluehelp');
+            oTable.removeSelections(true);
+            oSelectedTokens.removeAllTokens();
+            this.getView().byId("supplierVHDialog").close();
+        },
+        onPlantVH: async function () {
+            var oModel = this.getView().getModel(),
+                that = this,
+                oFilter;
+            oDialogplantVH = this.byId("plantVHDialog");
+            let oPlantsVH = await that._getplants(oModel, oFilter);
+            if (oPlantsVH !== '404') {
+                oplantsVHModel.setData(oPlantsVH);
+                oplantsVHModel.refresh();
+                that.getView().setModel(oplantsVHModel, "PlantVH");
+            } else {
+                oPlantsVH = [];
+                oplantsVHModel.setData(oPlantsVH);
+                oplantsVHModel.refresh();
+                that.getView().setModel(oplantsVHModel, "PlantVH");
+            }
+            if (!oDialogplantVH) {
+                oDialogplantVH = new sap.ui.xmlfragment(this.getView().getId(), "kanbancard.view.PlantVH", this);
+                this.getView().addDependent(oDialogplantVH);
+                oDialogplantVH.open();
+            } else {
+                oDialogplantVH.open();
+            }
+        },
+        onPlantSearch: async function (oEvent) {
+            var oModel = this.getView().getModel(),
+                oTable = this.getView().byId('plantvaluehelp'),
+                sQuery = oEvent.getSource().getValue(),
+                that = this,
+                oFilter = [],
+                oPlantfilter;
+            oPlantfilter = new sap.ui.model.Filter({
+                filters: [
+                    new sap.ui.model.Filter("Plant", sap.ui.model.FilterOperator.Contains, sQuery),
+                    new sap.ui.model.Filter("PlantName", sap.ui.model.FilterOperator.Contains, sQuery)
+                ],
+                and: false
+            });
+            oFilter.push(oPlantfilter);
+            oTable.removeSelections(true);
+            let oPlantsVH = await that._getplants(oModel, oFilter);
+            if (oPlantsVH !== '404') {
+                oplantsVHModel.setData(oPlantsVH);
+                oplantsVHModel.refresh();
+                that.getView().setModel(oplantsVHModel, "PlantVH");
+            } else {
+                oPlantsVH = [];
+                oplantsVHModel.setData(oPlantsVH);
+                oplantsVHModel.refresh();
+                that.getView().setModel(oplantsVHModel, "PlantVH");
+            }
+        },
+        OnVHPlantSelected: function (oEvent) {
+            var oMultiInputSelected = this.getView().byId('id_plant_value_help');
+            var oSelected = oEvent.getParameter('selected');
+            var oRemoved = oEvent.getParameter('removed');
+            var oValue = oEvent.getParameter('listItem').getCells()[0].getText();
+            if (oSelected === true) {
+                oMultiInputSelected.addToken(new sap.m.Token({
+                    key: oValue, text: oValue
+                }));
+            } else {
+                var removedTokens = oMultiInputSelected.getTokens();
+                var index = -1;
+                for (var i = 0; i < removedTokens.length; i++) {
+                    if (removedTokens[i].getKey() === oValue || removedTokens[i].getText() === oValue) {
+                        index = i;
+                        break;
+                    }
+                }
+                oMultiInputSelected.removeToken(index);
+            }
+        },
+        okplantVHDialog: function () {
+            var oTable = this.getView().byId('plantvaluehelp');
+            var oSelectedTokens = this.getView().byId('id_plant_value_help');
+            var oMultiInput = this.getView().byId('id_plant');
+            var aTokens = oSelectedTokens.getTokens();
+            aTokens.forEach(function (oToken) {
+                if (oToken) {
+                    oMultiInput.addToken(oToken);
+                }
+            });
+            this.getView().byId("plantVHDialog").close();
+            oTable.removeSelections(true);
+        },
+        closeplantVHDialog: function () {
+            var oSelectedTokens = this.getView().byId('id_plant_value_help');
+            var oTable = this.getView().byId('plantvaluehelp');
+            oTable.removeSelections(true);
+            oSelectedTokens.removeAllTokens();
+            this.getView().byId("plantVHDialog").close();
         },
         _getmaterials: function (oModel, filters) {
             return new Promise((resolve, reject) => {
@@ -219,6 +578,44 @@ sap.ui.define([
                 });
             });
         },
+        _getplants: function (oModel, filters) {
+            return new Promise((resolve, reject) => {
+                oModel.read("/PlantsVH", {
+                    filters: filters,
+                    urlParameters: { "$top": 200 },
+                    success: function (oData) {
+                        var aPlants = oData.results;
+                        if (aPlants.length > 0) {
+                            resolve(aPlants);
+                        } else {
+                            resolve('404');
+                        }
+                    },
+                    error: function (oError) {
+                        reject('404');
+                    }
+                });
+            });
+        },
+        _getprinters: function (oModel, filters) {
+            return new Promise((resolve, reject) => {
+                oModel.read("/Printers", {
+                    filters: filters,
+                    urlParameters: { "$top": 200 },
+                    success: function (oData) {
+                        var aPrinters = oData.results;
+                        if (aPrinters.length > 0) {
+                            resolve(aPrinters);
+                        } else {
+                            resolve('404');
+                        }
+                    },
+                    error: function (oError) {
+                        reject('404');
+                    }
+                });
+            });
+        },
         onFilter: async function () {
             var oPlants = this.getView().byId("id_plant").getTokens(),
                 oSuppliers = this.getView().byId("id_supplier").getTokens(),
@@ -230,7 +627,7 @@ sap.ui.define([
             oFieldModel.setProperty("/bHideColumn", false);
             oFieldModel.refresh();
             oExecuteBusyModel = new sap.m.BusyDialog({
-                title: "Printing Kanban Labels",
+                title: "Loading Data",
                 text: "Please wait....."
             });
             oExecuteBusyModel.open();
@@ -307,6 +704,7 @@ sap.ui.define([
                     }
                 } catch (error) {
                     MessageBox.error("500 Internal Error to get Data");
+                    oExecuteBusyModel.close();
                 }
 
 
@@ -316,6 +714,18 @@ sap.ui.define([
                 oHierarchyEntryModel.setData(HierarchyEntries);
                 this.getView().setModel(oHierarchyEntryModel, "Entries");
                 oExecuteBusyModel.close();
+            }
+        },
+        onUpdateFinished: function(){
+            var oTable = this.getView().byId("tableId1");
+            var aItems = oTable.getItems();
+            for (var i = 0; i < aItems.length; i++) {
+                //console.log();
+                if (aItems[i].getCells()[5].getText() == 'No PIR found') {
+                    aItems[i].getMultiSelectControl(/* bCreateIfNotExist = */ true).setEditable(false);
+                } else {
+                    aItems[i].getMultiSelectControl(/* bCreateIfNotExist = */ true).setEditable(true);
+                }
             }
         },
         _getKanbandata: function (oModel, filters) {
@@ -346,7 +756,7 @@ sap.ui.define([
             var oConfigData = oConfigDataModel.getData().items;
             var oPrinter = this.getView().byId('id_printer').getValue();
             var oQuantity = this.getView().byId('id_id_quantity_val').getValue();
-            if (oPrinter && oQuantity){
+            if (oPrinter && oQuantity) {
                 this.getView().byId('id_printer').setValueState(ValueState.None);
                 this.getView().byId('id_id_quantity_val').setValueState(ValueState.None);
                 try {
@@ -369,6 +779,11 @@ sap.ui.define([
                     sUrl = '';
                 }
                 if (sUrl && sToken) {
+                    oExecuteBusyModel = new sap.m.BusyDialog({
+                        title: "Printing Kanban Labels",
+                        text: "Please wait....."
+                    });
+                    oExecuteBusyModel.open();
                     if (oSelectedItems.length > 0) {
                         var oLoftware = {}, Variables;
                         oLoftware.Variables = [];
@@ -377,6 +792,16 @@ sap.ui.define([
                         for (var oSelectedItem of oSelectedItems) {
                             Variables = {};
                             var oContext = oSelectedItem.getCells();
+                            oSelectedItemArray.push({ partnumber: oContext[1].getText(), 
+                                                      partdescription: oContext[2].getText(), 
+                                                      baseunit: oContext[3].getText(),
+                                                      vendorname :  oContext[4].getText(),
+                                                      vendornumber : oContext[5].getText(),
+                                                      moqquant : oContext[6].getText(),
+                                                      boxquant : oContext[7].getText(),
+                                                      strikequant : oContext[8].getText(),
+                                                      leadtime : oContext[9].getText(),
+                            });
                             var urllabel = "/Labels/Templates/IHP KANBAN CARD.nlbl";
                             if (urllabel) {
                                 Variables.FilePath = urllabel;
@@ -390,20 +815,20 @@ sap.ui.define([
                             Variables.Text0058 = oContext[3].getText();//Base Unit Of Measure
                             Variables.Text0032 = oContext[4].getText();//Vendor Name
                             Variables.Text0031 = oContext[5].getText();//Vednor Number
-                            if (oContext[6].getText() == '0'){
-                            }else{
+                            if (oContext[6].getText() == '0') {
+                            } else {
                                 Variables.Barc0029 = oContext[6].getText();//Mou Quantity
                             }
-                            if (oContext[7].getText() == '0'){
-                            }else{
+                            if (oContext[7].getText() == '0') {
+                            } else {
                                 Variables.Text0043 = oContext[7].getText();//Box Quantity
                             }
-                            if (oContext[8].getText() == '0'){
-                            }else{
+                            if (oContext[8].getText() == '0') {
+                            } else {
                                 Variables.Text0045 = oContext[8].getText();//Strike Quantity
                             }
-                            if (oContext[9].getText().trim() == '0'){
-                            }else{
+                            if (oContext[9].getText().trim() == '0') {
+                            } else {
                                 Variables.Text0046 = oContext[9].getText().trim();//Lead Time`
                             }
                             oLoftware.Variables.push(Variables);
@@ -412,44 +837,91 @@ sap.ui.define([
                             console.log(oLoftware);
                             var oLoftwareJson = JSON.stringify(oLoftware);
                             try {
-                                 var oResult = await that._sendkanbanlabels(sUrl, oLoftwareJson);
-                                 try {
+                                var oResult = await that._sendkanbanlabels(sUrl, oLoftwareJson);
+                                try {
                                     console.log(oResult);
-                                    if(oResult === '201'){
-                                        MessageBox.success(kanbanLogs[0].Message);
-                                    }else{
-                                        MessageBox.error(kanbanLogs[0].Message);
+                                    var oModel = this.getView().getModel("Entries");
+                                    var oData = oModel.getData();
+                                    if (oResult === '201') {
+                                        for (var i = 0; i < oData.length; i++) {
+                                            let oSelectedArray = oSelectedItemArray.filter(function (section) {
+                                                return section.partnumber === oData[i].partnumber && 
+                                                       product.partdescription === oData[i].partdescription && 
+                                                       product.baseunit === oData[i].baseunit;
+                                                       product.vendorname === oData[i].vendorname;
+                                                       product.vendornumber === oData[i].vendornumber;
+                                                       product.moqquant === oData[i].moqquant;
+                                                       product.boxquant === oData[i].boxquant;
+                                                       product.leadtime === oData[i].leadtime;
+                                            });
+                                            if (oSelectedArray.length > 0) {
+                                                oData[i].Status = kanbanLogs[0].Status;
+                                                oData[i].Message = kanbanLogs[0].Message;
+                                            }
+                                        }
+                                        oModel.refresh();
+                                        oFieldModel = this.getView().getModel("FieldProperty");
+                                        oFieldModel.setProperty("/bHideColumn", true);
+                                        oFieldModel.refresh();
+                                        oExecuteBusyModel.close();
+                                    } else {
+                                        for (var i = 0; i < oData.length; i++) {
+                                            let oSelectedArray = oSelectedItemArray.filter(function (section) {
+                                                return section.partnumber === oData[i].partnumber && 
+                                                       product.partdescription === oData[i].partdescription && 
+                                                       product.baseunit === oData[i].baseunit;
+                                                       product.vendorname === oData[i].vendorname;
+                                                       product.vendornumber === oData[i].vendornumber;
+                                                       product.moqquant === oData[i].moqquant;
+                                                       product.boxquant === oData[i].boxquant;
+                                                       product.leadtime === oData[i].leadtime;
+                                            });
+                                            if (oSelectedArray.length > 0) {
+                                                oData[i].Status = kanbanLogs[0].Status;
+                                                oData[i].Message = kanbanLogs[0].Message;
+                                            }
+                                        }
+                                        oModel.refresh();
+                                        oFieldModel = this.getView().getModel("FieldProperty");
+                                        oFieldModel.setProperty("/bHideColumn", true);
+                                        oFieldModel.refresh();
+                                        oExecuteBusyModel.close();
                                     }
-    
-                                 } catch (error) {
-                                    
-                                 }
+
+                                } catch (error) {
+                                    MessageBox.error('Error While Printing the kanban labels');
+                                    oExecuteBusyModel.close();
+                                }
                             } catch (error) {
+                                MessageBox.error('Error While Printing the kanban labels');
+                                oExecuteBusyModel.close();
                             }
                         } else {
-    
+
                         }
                     } else {
                         MessageBox.warning("No Orders selected to print labels");
+                        oExecuteBusyModel.close();
                     }
-    
+
                 } else {
                     MessageBox.warning("No Loftware Configurations maintaned!! Please Configure");
+                    oExecuteBusyModel.close();
                 }
 
-            }else{
+            } else {
                 MessageBox.warning("Fill Mandatory Fields");
-                if (!oPrinter){
+                if (!oPrinter) {
                     this.getView().byId('id_printer').setValueState(ValueState.Error);
                     this.getView().byId('id_printer').setValueStateText('Print Queue is mandatory');
-                }else{
+                } else {
                     this.getView().byId('id_printer').setValueState(ValueState.None);
                     this.getView().byId('id_printer').setValueStateText('');
                 }
-                if (!oQuantity){
+                if (!oQuantity) {
                     this.getView().byId('id_id_quantity_val').setValueState(ValueState.Error);
                     this.getView().byId('id_id_quantity_val').setValueStateText('Number of Kanban Cards is Mandatory');
-                }else{
+                } else {
                     this.getView().byId('id_id_quantity_val').setValueState(ValueState.None);
                     this.getView().byId('id_id_quantity_val').setValueStateText('');
                 }
@@ -457,8 +929,106 @@ sap.ui.define([
 
         },
         /*Printer value help */
-        onPrinterVH: function(){
-            
+        onPrinterVH: async function (oEvent) {
+            var sInputValue = oEvent.getSource().getValue(),
+                oView = this.getView(),
+                oPlantfilter,
+                oModel = this.getView().getModel(),
+                that = this;
+            let oPrinters = await that._getprinters(oModel);
+            if (oPrinters !== '404') {
+                oprinterModel.setData(oPrinters);
+                oprinterModel.refresh();
+                that.getView().setModel(oprinterModel, "Printers");
+            } else {
+                oPrinters = []
+                oprinterModel.setData(oPrinters);
+                oprinterModel.refresh();
+                that.getView().setModel(oprinterModel, "Printers");
+            }
+            if (!this._pValueHelpDialogPrinter) {
+                this._pValueHelpDialogPrinter = Fragment.load({
+                    id: oView.getId(),
+                    name: "kanbancard.view.PrinterVH",
+                    controller: this
+                }).then(function (oDialog) {
+                    oView.addDependent(oDialog);
+                    return oDialog;
+                });
+            }
+            this._pValueHelpDialogPrinter.then(function (oDialog) {
+                // Create a filter for the binding
+                if (sInputValue) {
+                    oDialog.open(sInputValue);
+                } else {
+                    oDialog.open();
+                }
+            });
+        },
+        onValueHelpprinterSearch: async function (oEvent) {
+            var oFilter = [], oPrinterfilter,
+                oModel = this.getView().getModel(),
+                sValue = oEvent.getParameter("value"),
+                that = this;
+            if (sValue) {
+                oPrinterfilter = new sap.ui.model.Filter("Printer", sap.ui.model.FilterOperator.Contains, sValue);
+                oFilter.push(oPrinterfilter);
+            }
+            let oPrinter = await that._getprinters(oModel, oFilter);
+            if (oPrinter !== '404') {
+                oprinterModel.setData(oPrinter);
+                oprinterModel.refresh();
+                that.getView().setModel(oprinterModel, "Printers");
+            } else {
+                oPrinter = [];
+                oprinterModel.setData(oPrinter);
+                oprinterModel.refresh();
+                that.getView().setModel(oprinterModel, "Printers");
+            }
+
+        },
+        onValueHelpprinterClose: function (oEvent) {
+            var oSelectedItem = oEvent.getParameter("selectedItem");
+            var sPrinter = this.getView().byId('id_printer');
+            if (oSelectedItem) {
+                var oValue = oSelectedItem.getTitle();
+                sPrinter.setValue(oValue);
+            }
+
+        },
+        onPrinterChanges: async function(oEvent){
+            var oValue = oEvent.getParameter("newValue"),
+                oModel = this.getView().getModel(),ofilterPrinter,oFilter = [];
+            if(oValue){
+                ofilterPrinter = new sap.ui.model.Filter("Printer", "EQ", oValue);
+                oFilter.push(ofilterPrinter);
+                try {
+                    var oPrinters = await that._getprinters(oModel, oFilter);
+                    if (oPrinters == '404') {
+                        this.getView().byId('id_printer').setValueState(ValueState.Error);
+                        this.getView().byId('id_printer').setValueStateText('Invalid Printer- ' + oValue);
+                    } else {
+                        this.getView().byId('id_printer').setValueState(ValueState.None);
+                        this.getView().byId('id_printer').setValueStateText('');
+                    }
+                }catch (error){
+                    this.getView().byId('id_printer').setValueState(ValueState.Error);
+                    this.getView().byId('id_printer').setValueStateText('Invalid Printer- ' + oValue);
+                }
+            }else{
+                this.getView().byId('id_printer').setValueState(ValueState.Error);
+                this.getView().byId('id_printer').setValueStateText('Print Queue is mandatory');
+            }
+        },
+        onQuantityChange: function(oEvent){
+            var oValue = oEvent.getParameter("newValue");
+            if(oValue){
+                this.getView().byId('id_id_quantity_val').setValueState(ValueState.None);
+                this.getView().byId('id_id_quantity_val').setValueStateText('');
+            }else{
+                this.getView().byId('id_id_quantity_val').setValueState(ValueState.Error);
+                this.getView().byId('id_id_quantity_val').setValueStateText('Number of Kanban Cards is Mandatory');
+            }
         },
         _sendkanbanlabels: async function (sUrl, oLoftwareJson) {
             return new Promise((resolve, reject) => {

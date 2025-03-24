@@ -1,0 +1,59 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:core="sap.ui.core">
+	<Dialog
+		id="plantVHDialog"
+		title="Search Suppiers" contentWidth="50%">
+		<content>
+            <VBox id="formplantContainer" >
+                <Table id="plantvaluehelp" width="auto" mode="MultiSelect" inset="false" enableBusyIndicator="true"
+                    sticky="ColumnHeaders,HeaderToolbar"
+                    growing="true"
+                    alternateRowColors="true"
+                    showNoData="true"
+					selectionChange="OnVHPlantSelected"
+                    items="{
+                            path: 'PlantVH>/'
+                        }">
+                        <headerToolbar>
+								<OverflowToolbar id="id_tabletoolbar3">
+									<SearchField id="id_plant_search" search="onPlantSearch" change="onPlantSearch" placeholder="Search Plants" width="90%" />
+								</OverflowToolbar>
+						</headerToolbar>
+                        <columns>
+								<Column id="id_plantvh_key1" >
+									<Text id="id_plant_key" text="Plant"/>
+								</Column>
+                                <Column id="id_plantvh_desc1">
+                                    <Text id="id_plant_desc" text="Plant Name"/>
+								</Column>
+						</columns>
+                        <items>
+							<ColumnListItem id="id_plantvaluecolumns1" vAlign="Middle">
+								<cells>
+                                    <Text  id="id_plantkey_text"  text="{PlantVH>Plant}" />
+                                    <Text  id="id_plantdesc_text"  text="{PlantVH>PlantName}" />
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                </Table>
+            </VBox>
+        </content>
+        <footer>
+			<Toolbar id="id_toolbar3">
+				<content>
+                    <MultiInput id="id_plant_value_help" showValueHelp="false" placeholder="Plants Selected" />
+					<ToolbarSpacer id="id_spacer3" />
+					<Button id="id_plantsave" type="Emphasized"
+							text="ok"
+							press="okplantVHDialog" />
+					<Button id="id_plantreject"
+						text="close"
+						type="Reject"
+						press="closeplantVHDialog" />
+				</content>
+			</Toolbar>
+		</footer>
+    </Dialog>
+</core:FragmentDefinition>

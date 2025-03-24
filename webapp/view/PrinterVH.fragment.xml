@@ -1,0 +1,14 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog
+		id="selectDialogprinters"
+		title="{i18n>printers}"
+		items="{Printers>/}"
+		search=".onValueHelpprinterSearch"
+		confirm=".onValueHelpprinterClose"
+		cancel=".onValueHelprinterClose"
+		>
+		<StandardListItem id="id_standard_printers"
+			title="{Printers>Printer}"
+			description="{Printers>PrinterDesc}" />
+	</SelectDialog>
+</core:FragmentDefinition>

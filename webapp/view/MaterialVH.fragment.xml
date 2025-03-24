@@ -12,12 +12,13 @@
                     growing="true"
                     alternateRowColors="true"
                     showNoData="true"
+					selectionChange="OnVHMaterialSelected"
                     items="{
                             path: 'MaterialsVH>/'
                         }">
                         <headerToolbar>
 								<OverflowToolbar id="id_tabletoolbar1">
-									<SearchField id="id_material_search" width="90%" />
+									<SearchField id="id_material_search" search="onMaterialSearch" change="onMaterialSearch" placeholder="Search Materials" width="90%" />
 								</OverflowToolbar>
 						</headerToolbar>
                         <columns>
@@ -25,11 +26,11 @@
 									<Text id="id_mat_key" text="Material"/>
 								</Column>
                                 <Column id="id_matvh_desc1">
-                                    <Text id="id_mat_desc" text="Material"/>
+                                    <Text id="id_mat_desc" text="Material Description"/>
 								</Column>
 						</columns>
                         <items>
-							<ColumnListItem id="id_materialvaluecolumns1" vAlign="Middle" >
+							<ColumnListItem id="id_materialvaluecolumns1" vAlign="Middle">
 								<cells>
                                     <Text  id="id_matkey_text"  text="{MaterialsVH>Material}" />
                                     <Text  id="id_matdesc_text"  text="{MaterialsVH>MaterialText}" />
@@ -42,11 +43,11 @@
         <footer>
 			<Toolbar id="id_toolbar">
 				<content>
-                    <MultiInput id="id_material_value_help" showValueHelp="false" />
+                    <MultiInput id="id_material_value_help" showValueHelp="false" placeholder="Materials Selected" />
 					<ToolbarSpacer id="id_spacer" />
 					<Button id="id_save" type="Emphasized"
 							text="ok"
-							press="._generateInvalidUserInput" />
+							press="okmaterialVHDialog" />
 					<Button id="id_reject"
 						text="close"
 						type="Reject"

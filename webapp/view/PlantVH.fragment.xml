@@ -4,7 +4,7 @@
 	xmlns:core="sap.ui.core">
 	<Dialog
 		id="plantVHDialog"
-		title="Search Suppiers" contentWidth="50%">
+		title="Search Plants" contentWidth="50%">
 		<content>
             <VBox id="formplantContainer" >
                 <Table id="plantvaluehelp" width="auto" mode="MultiSelect" inset="false" enableBusyIndicator="true"

@@ -154,10 +154,12 @@ sap.ui.define([
                         });
                         let filteredTokenMaterials = MaterialsVH.filter(item => item.MaterialId == oValue);
                         if (filteredTokenMaterials.length > 0) {
+                            oMultiInput.setValue('');
                         } else {
                             oMultiInput.addToken(new sap.m.Token({
                                 key: oValue, text: oValue
                             }));
+                            oMultiInput.setValue('');
                         }
                     }
                 } catch (error) {
@@ -197,10 +199,12 @@ sap.ui.define([
                         });
                         let filteredTokenSuppliers = SupplierVH.filter(item => item.SupplierId == oValue);
                         if (filteredTokenSuppliers.length > 0) {
+                            oMultiInput.setValue('');
                         } else {
                             oMultiInput.addToken(new sap.m.Token({
                                 key: oValue, text: oValue
                             }));
+                            oMultiInput.setValue('');
                         }
                     }
                 } catch (error) {
@@ -240,10 +244,12 @@ sap.ui.define([
                         });
                         let filteredTokenPlants = PlantVH.filter(item => item.Plant == oValue);
                         if (filteredTokenPlants.length > 0) {
+                            oMultiInput.setValue('');
                         } else {
                             oMultiInput.addToken(new sap.m.Token({
                                 key: oValue, text: oValue
                             }));
+                            oMultiInput.setValue('');
                         }
                     }
                 } catch (error) {
@@ -846,13 +852,13 @@ sap.ui.define([
                                         for (var i = 0; i < oData.length; i++) {
                                             let oSelectedArray = oSelectedItemArray.filter(function (section) {
                                                 return section.partnumber === oData[i].partnumber && 
-                                                       product.partdescription === oData[i].partdescription && 
-                                                       product.baseunit === oData[i].baseunit;
-                                                       product.vendorname === oData[i].vendorname;
-                                                       product.vendornumber === oData[i].vendornumber;
-                                                       product.moqquant === oData[i].moqquant;
-                                                       product.boxquant === oData[i].boxquant;
-                                                       product.leadtime === oData[i].leadtime;
+                                                       section.partdescription === oData[i].partdescription && 
+                                                       section.baseunit === oData[i].baseunit &&
+                                                       section.vendorname === oData[i].vendorname &&
+                                                       section.vendornumber === oData[i].vendornumber &&
+                                                       section.moqquant === oData[i].moqquant &&
+                                                       section.boxquant === oData[i].boxquant &&
+                                                       section.leadtime === oData[i].leadtime;
                                             });
                                             if (oSelectedArray.length > 0) {
                                                 oData[i].Status = kanbanLogs[0].Status;
@@ -868,13 +874,13 @@ sap.ui.define([
                                         for (var i = 0; i < oData.length; i++) {
                                             let oSelectedArray = oSelectedItemArray.filter(function (section) {
                                                 return section.partnumber === oData[i].partnumber && 
-                                                       product.partdescription === oData[i].partdescription && 
-                                                       product.baseunit === oData[i].baseunit;
-                                                       product.vendorname === oData[i].vendorname;
-                                                       product.vendornumber === oData[i].vendornumber;
-                                                       product.moqquant === oData[i].moqquant;
-                                                       product.boxquant === oData[i].boxquant;
-                                                       product.leadtime === oData[i].leadtime;
+                                                       section.partdescription === oData[i].partdescription && 
+                                                       section.baseunit === oData[i].baseunit &&
+                                                       section.vendorname === oData[i].vendorname &&
+                                                       section.vendornumber === oData[i].vendornumber &&
+                                                       section.moqquant === oData[i].moqquant &&
+                                                       section.boxquant === oData[i].boxquant &&
+                                                       section.leadtime === oData[i].leadtime;
                                             });
                                             if (oSelectedArray.length > 0) {
                                                 oData[i].Status = kanbanLogs[0].Status;
@@ -998,6 +1004,7 @@ sap.ui.define([
         },
         onPrinterChanges: async function(oEvent){
             var oValue = oEvent.getParameter("newValue"),
+                that =this,
                 oModel = this.getView().getModel(),ofilterPrinter,oFilter = [];
             if(oValue){
                 ofilterPrinter = new sap.ui.model.Filter("Printer", "EQ", oValue);
@@ -1067,6 +1074,32 @@ sap.ui.define([
                     }
                 });
             })
-        }
+        },
+        onExit : function(){
+            var oMaterialVH = this.getView().byId('materialVHDialog');
+            var oPlantVH = this.getView().byId('plantVHDialog');
+            var oSupplierVH = this.getView().byId('supplierVHDialog');
+            if(oMaterialVH){
+                var omaterialContent = oMaterialVH.getContent();
+                oMaterialVH.destroyContent(omaterialContent[0]);
+                oMaterialVH.destroy();
+                this.getView().byId('id_matkey_text').destroy();
+                this.getView().byId('id_matdesc_text').destroy();
+            }
+            if(oSupplierVH){
+                var osupplierContent = oSupplierVH.getContent();
+                oSupplierVH.destroyContent(osupplierContent[0]);
+                oSupplierVH.destroy();
+                this.getView().byId('id_supkey_text').destroy();
+                this.getView().byId('id_supdesc_text').destroy();
+            }
+            if(oPlantVH){
+                var oplantContent = oPlantVH.getContent();
+                oPlantVH.destroyContent(oplantContent[0]);
+                oPlantVH.destroy();
+                this.getView().byId('id_plantkey_text').destroy();
+                this.getView().byId('id_plantdesc_text').destroy();
+            }
+        },
     });
 });

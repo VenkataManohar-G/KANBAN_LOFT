@@ -725,14 +725,14 @@ sap.ui.define([
         onUpdateFinished: function(){
             var oTable = this.getView().byId("tableId1");
             var aItems = oTable.getItems();
-            for (var i = 0; i < aItems.length; i++) {
+            // for (var i = 0; i < aItems.length; i++) {
                 //console.log();
-                if (aItems[i].getCells()[5].getText() == 'No PIR found') {
-                    aItems[i].getMultiSelectControl(/* bCreateIfNotExist = */ true).setEditable(false);
-                } else {
-                    aItems[i].getMultiSelectControl(/* bCreateIfNotExist = */ true).setEditable(true);
-                }
-            }
+               // if (aItems[i].getCells()[5].getText() == 'No PIR found') {
+                //    aItems[i].getMultiSelectControl(/* bCreateIfNotExist = */ true).setEditable(false);
+               // } else {
+               //     aItems[i].getMultiSelectControl(/* bCreateIfNotExist = */ true).setEditable(true);
+             //   }
+           // }
         },
         _getKanbandata: function (oModel, filters) {
             return new Promise((resolve, reject) => {
@@ -762,6 +762,7 @@ sap.ui.define([
             var oConfigData = oConfigDataModel.getData().items;
             var oPrinter = this.getView().byId('id_printer').getValue();
             var oQuantity = this.getView().byId('id_id_quantity_val').getValue();
+            kanbanLogs = [];
             if (oPrinter && oQuantity) {
                 this.getView().byId('id_printer').setValueState(ValueState.None);
                 this.getView().byId('id_id_quantity_val').setValueState(ValueState.None);
@@ -819,8 +820,14 @@ sap.ui.define([
                             Variables.Barc0008 = oContext[1].getText(); //Material
                             Variables.Text0014 = oContext[2].getText();//Material Text
                             Variables.Text0058 = oContext[3].getText();//Base Unit Of Measure
-                            Variables.Text0032 = oContext[4].getText();//Vendor Name
-                            Variables.Text0031 = oContext[5].getText();//Vednor Number
+                            if (oContext[5].getText() == 'No PIR found'){
+                                Variables.Text0032 = ''; //Vendor Name
+                                Variables.Text0031 = ''; //Vednor Number
+                            }else{
+                                Variables.Text0032 = oContext[4].getText();//Vendor Name
+                                Variables.Text0031 = oContext[5].getText();//Vednor Number
+                            }
+
                             if (oContext[6].getText() == '0') {
                             } else {
                                 Variables.Barc0029 = oContext[6].getText();//Mou Quantity
@@ -851,11 +858,17 @@ sap.ui.define([
                                     if (oResult === '201') {
                                         for (var i = 0; i < oData.length; i++) {
                                             let oSelectedArray = oSelectedItemArray.filter(function (section) {
+                                                var sVendor;
+                                                if(section.vendornumber == 'No PIR found'){
+                                                    sVendor = '';
+                                                }else{
+                                                    sVendor = oData[i].vendornumber;
+                                                }
                                                 return section.partnumber === oData[i].partnumber && 
                                                        section.partdescription === oData[i].partdescription && 
                                                        section.baseunit === oData[i].baseunit &&
                                                        section.vendorname === oData[i].vendorname &&
-                                                       section.vendornumber === oData[i].vendornumber &&
+                                                       section.vendornumber === sVendor &&
                                                        section.moqquant === oData[i].moqquant &&
                                                        section.boxquant === oData[i].boxquant &&
                                                        section.leadtime === oData[i].leadtime;
@@ -873,11 +886,17 @@ sap.ui.define([
                                     } else {
                                         for (var i = 0; i < oData.length; i++) {
                                             let oSelectedArray = oSelectedItemArray.filter(function (section) {
+                                                var sVendor;
+                                                if(section.vendornumber == 'No PIR found'){
+                                                    sVendor = 'No PIR found';
+                                                }else{
+                                                    sVendor = oData[i].vendornumber;
+                                                }
                                                 return section.partnumber === oData[i].partnumber && 
                                                        section.partdescription === oData[i].partdescription && 
                                                        section.baseunit === oData[i].baseunit &&
                                                        section.vendorname === oData[i].vendorname &&
-                                                       section.vendornumber === oData[i].vendornumber &&
+                                                       section.vendornumber === sVendor &&
                                                        section.moqquant === oData[i].moqquant &&
                                                        section.boxquant === oData[i].boxquant &&
                                                        section.leadtime === oData[i].leadtime;
